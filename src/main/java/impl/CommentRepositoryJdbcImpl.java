@@ -105,7 +105,7 @@ public class CommentRepositoryJdbcImpl implements CommentRepository {
 
     private User getUserFromResultSet(ResultSet resultSet) throws SQLException {
         return User.builder()
-                .id(resultSet.getLong("user_id"))
+                .user_id(resultSet.getLong("user_id"))
                 .username(resultSet.getString("username"))
                 .email(resultSet.getString("email"))
                 .build();

@@ -11,5 +11,6 @@ public interface TaskService {
     List<Task> getTasksByCategory(Category category);
     Task getTaskById(Long taskId);
     void deleteTask(Long taskId);
+    void updateTask(Task task);
 }
 

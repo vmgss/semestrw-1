@@ -37,10 +37,12 @@ public class ProfileServlet extends HttpServlet {
         dataSource.setUser("postgres");
         dataSource.setPassword("55555");
 
-        TaskRepository taskRepository = new TaskRepositoryJdbcImpl(dataSource);
-        this.taskService = new TaskServiceImpl(taskRepository);
+        this.userService = new UserServiceImpl(new UsersRepositoryJdbcImpl(dataSource));
+        this.taskService = new TaskServiceImpl(new TaskRepositoryJdbcImpl(dataSource));
         this.categoryService = new CategoryServiceImpl(new CategoryRepositoryJdbcImpl(dataSource));
+        this.commentService = new CommentServiceImpl(new CommentRepositoryJdbcImpl(dataSource));
     }
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -56,7 +58,7 @@ public class ProfileServlet extends HttpServlet {
 
                 List<Task> tasks = taskService.getAllTasks();
                 List<Category> categories = categoryService.getAllCategories();
-                List<Comment> comments = commentService.getCommentsByTaskId(user.getId());
+                List<Comment> comments = commentService.getCommentsByTaskId(user.getUser_id());
 
                 request.setAttribute("user", user);
                 request.setAttribute("tasks", tasks);

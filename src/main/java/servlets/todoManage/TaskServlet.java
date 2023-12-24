@@ -1,5 +1,6 @@
 package servlets.todoManage;
 
+import dto.TaskDto;
 import impl.*;
 import interfaces.TaskRepository;
 import interfaces.UsersRepository;
@@ -53,25 +54,24 @@ public class TaskServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        String title = request.getParameter("title");
-        String description = request.getParameter("description");
-        String categoryIdStr = request.getParameter("category_id");
-        Long categoryId = Long.parseLong(categoryIdStr);
-        //извлекаем параметры
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String taskIdStr = request.getParameter("task_id");
+        Long taskId = Long.parseLong(taskIdStr);
+        String newTitle = request.getParameter("new_title");
+        String newDescription = request.getParameter("new_description");
 
-        // создание новой задачи
-        Task newTask = Task.builder()
-                .title(title)
-                .description(description)
-                .category(categoryService.getCategoryById(categoryId))
-                //получает  id категории
-                .build();
+        // Получите существующую задачу
+        Task existingTask = taskService.getTaskById(taskId);
 
-        taskService.createTask(newTask);
+        // Обновите задачу новыми значениями
+        existingTask.setTitle(newTitle);
+        existingTask.setDescription(newDescription);
 
-        // Перенаправление на страницу с задачами
+        // Сохраните обновленную задачу
+        taskService.updateTask(existingTask);
+
+        // Перенаправьте на страницу задач
         response.sendRedirect(request.getContextPath() + "/tasks");
     }
 }

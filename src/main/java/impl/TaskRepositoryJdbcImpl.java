@@ -105,6 +105,11 @@ public class TaskRepositoryJdbcImpl implements TaskRepository {
         }
     }
 
+    @Override
+    public void updateTask(Task task) {
+
+    }
+
 
     private Task mapResultSetToTask(ResultSet resultSet) throws SQLException {
         return Task.builder()

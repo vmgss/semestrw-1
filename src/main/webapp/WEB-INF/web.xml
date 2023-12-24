@@ -11,4 +11,8 @@
   <session-config>
     <session-timeout>10</session-timeout>
   </session-config>
+  <filter>
+    <filter-name>rolesFilter</filter-name>
+    <filter-class>filter.RolesFilter</filter-class>
+  </filter>
 </web-app>

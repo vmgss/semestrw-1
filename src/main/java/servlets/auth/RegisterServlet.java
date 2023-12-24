@@ -28,7 +28,6 @@ public class RegisterServlet extends HttpServlet {
 
     private UsersRepository usersRepository;
     private RegisterService registerService;
-    private UserService userService;
 
     @Override
     public void init() {
@@ -41,59 +40,34 @@ public class RegisterServlet extends HttpServlet {
         DataSource dataSource = new DriverManagerDataSource(DB_URL, DB_USER, DB_PASSWORD);
 
         usersRepository = new UsersRepositoryJdbcImpl(dataSource);
-        registerService = new RegisterServiceImpl();
-        userService = new UserServiceImpl(usersRepository);
+        registerService = new RegisterServiceImpl(usersRepository);
+        UserService userService = new UserServiceImpl(usersRepository);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        HttpSession session = request.getSession();
-//        //получаем сессию текущую или создаем
-//        String username = (String) session.getAttribute("username");
-//        //извлекаем имя пользователя из сессии
-//
-//        if (username != null) {
-//            Optional<User> userOptional = userService.getUserByUsername(username);
-//            //если имя пользователя не null, то вызываем метод getUserByUsername
-//            //Optional<User> userOptional может работать с null
-//
-//            if (userOptional.isPresent()) {
-//                User user = userOptional.get();
-//                request.setAttribute("user", user);
-//                //если пользователь есть, то устанавливаем атрибут запроса user
-//            }
-//        }
-
         RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/register.jsp");
         dispatcher.forward(request, response);
-        //вытаскиваем страницу, собираем и отправляем на фронт
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        //получаем параметры запроса
+        String role = request.getParameter("role");
 
         String passwordHash = registerService.hashPassword(password);
-        //хэшируем пароль с registerService
 
-        User newUser = User.builder()
-                .username(username)
-                .email(email)
-                .passwordHash(passwordHash)
-                .build();
-
+        User newUser = new User(null, username, passwordHash, email,role);
         usersRepository.save(newUser);
-        //сохраняем пользователя в репозитории
 
-        //устанавливаем имя пользователя в сессии
         HttpSession session = request.getSession();
         session.setAttribute("username", newUser.getUsername());
 
         response.sendRedirect(request.getContextPath() + "/jsp/profile.jsp");
-        //перенаправляем на профиль
     }
 }
+
 
 

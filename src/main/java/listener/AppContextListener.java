@@ -9,8 +9,6 @@ import jakarta.servlet.annotation.WebListener;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import secure.AuthManager;
-import service.RegisterService;
 
 import javax.sql.DataSource;
 
@@ -37,7 +35,6 @@ public class AppContextListener implements ServletContextListener {
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        servletContext.setAttribute("authManager", new AuthManagerImpl(usersRepository));
         servletContext.setAttribute("userService", new UserServiceImpl(usersRepository));
         servletContext.setAttribute("usersRepository", usersRepository);
         servletContext.setAttribute("signInService", new SignInServiceImpl(usersRepository, passwordEncoder));
